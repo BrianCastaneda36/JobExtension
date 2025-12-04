@@ -29,6 +29,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+setTimeout(() => {
+  const hostname = window.location.hostname;
+  const isJobSite = hostname.includes('greenhouse') || hostname.includes('lever') || 
+                    hostname.includes('workday') || hostname.includes('jobs') || 
+                    hostname.includes('careers') || hostname.includes('apply') ||
+                    hostname.includes('linkedin') || hostname.includes('indeed');
+  
+  if (isJobSite && document.querySelectorAll('input, textarea, select').length > 3) {
+    prefillPage();
+  }
+}, 2000);
+
 function prefillPage() {
   chrome.storage.sync.get('profile', (data) => {
     let profile = data.profile;
@@ -40,7 +52,7 @@ function prefillPage() {
     const fields = document.querySelectorAll('input, textarea, select, button[role="combobox"]');
 
     fields.forEach(field => {
-      if (field.value && field.value.trim().length > 0) return;
+      if (hasMeaningfulValue(field)) return;
 
       const hint = buildHintString(field);
       const value = mapHintToValue(hint, profile);
@@ -67,6 +79,9 @@ function getLabelTextForField(field) {
   if (field.id) {
     const label = document.querySelector(`label[for="${field.id}"]`);
     if (label) return label.textContent;
+    
+    const labelById = document.querySelector(`label[id="${field.id}-label"]`);
+    if (labelById) return labelById.textContent;
   }
 
   let parent = field.parentElement;
@@ -78,7 +93,24 @@ function getLabelTextForField(field) {
   return '';
 }
 
+function hasMeaningfulValue(field) {
+  // Many job portals pre-seed URL fields with "https://", "https://www." or a bare LinkedIn template.
+  // Treat those as empty so we can still inject the real profile/website URLs.
+  if (field.tagName === 'BUTTON') return false;
+
+  const value = (field.value || '').trim();
+  if (!value) return false;
+
+  const placeholderUrl = /^https?:\/\/(www\.)?$/i;
+  const placeholderLinkedIn = /^https?:\/\/(www\.)?linkedin\.com(\/in\/?)?$/i;
+  const placeholderBare = /^(www|www\.)$/i;
+
+  return !(placeholderUrl.test(value) || placeholderLinkedIn.test(value) || placeholderBare.test(value));
+}
+
 function mapHintToValue(hint, profile) {
+  if (hint.includes('linkedin') || hint.includes('linked in')) return profile.linkedinUrl;
+  if (hint.includes('portfolio') || hint.includes('porfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github') || hint.includes('personal website')) return profile.portfolioUrl;
   if (hint.includes('country code') || (hint.includes('country') && hint.includes('code'))) return '+1';
   if (hint.includes('country') && !hint.includes('code')) return 'United States';
   if (hint.includes('first name') || hint.includes('firstname') || hint.includes('preferred first name')) {
@@ -96,8 +128,6 @@ function mapHintToValue(hint, profile) {
   if (hint.includes('password') || hint.includes('confirm password')) return profile.password;
   if (hint.includes('email')) return profile.email;
   if (hint.includes('phone') || hint.includes('mobile')) return profile.phone;
-  if (hint.includes('linkedin') || hint.includes('linked in')) return profile.linkedinUrl;
-  if (hint.includes('portfolio') || hint.includes('porfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github') || hint.includes('personal website')) return profile.portfolioUrl;
   if (hint.includes('resume') && !hint.includes('summary')) return profile.resumeUrl;
   if (hint.includes('current location') || hint.includes('location') || hint.includes('city')) {
     return profile.location;
