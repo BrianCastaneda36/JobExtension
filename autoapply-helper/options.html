@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoApply Helper - Settings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-root app-root--options">
+    <div class="app-header">
+      <div class="app-title">
+        <div class="app-title-logo"></div>
+        AutoApply Helper
+      </div>
+      <div class="app-subtitle">Profile & answers used for autofill</div>
+    </div>
+
+    <div class="options-main">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Basic profile</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="fullName">Full Name</label>
+            <input type="text" id="fullName" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="phone">Phone</label>
+            <input type="text" id="phone" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="location">Location</label>
+            <input type="text" id="location" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="linkedinUrl">LinkedIn URL</label>
+            <input type="url" id="linkedinUrl" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="portfolioUrl">Portfolio URL</label>
+            <input type="url" id="portfolioUrl" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Job preferences</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="desiredTitle">Desired Title</label>
+            <input type="text" id="desiredTitle" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="expectedSalaryYearly">Expected Salary (Yearly)</label>
+            <input type="text" id="expectedSalaryYearly" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="expectedSalaryHourly">Expected Salary (Hourly)</label>
+            <input type="text" id="expectedSalaryHourly" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="availability">Availability</label>
+            <input type="text" id="availability" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="workAuthorization">Work Authorization</label>
+            <input type="text" id="workAuthorization" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Reusable answers</div>
+          <div class="form-helper">These are used for long-answer fields like "Tell us about yourself" or "Why do you want this role?"</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="aboutYou">About You</label>
+            <textarea id="aboutYou" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="whyThisRoleTemplate">Why This Role (Template)</label>
+            <textarea id="whyThisRoleTemplate" class="form-textarea"></textarea>
+            <div class="form-helper">Use {role} and {company} as placeholders</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="strengths">Strengths</label>
+            <textarea id="strengths" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="remotePreference">Remote Preference</label>
+            <textarea id="remotePreference" class="form-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="options-footer">
+      <button id="saveBtn" class="btn btn-primary">💾 Save profile</button>
+      <div id="saveStatus" class="save-status">Profile saved successfully!</div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

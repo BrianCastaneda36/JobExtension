@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoApply Helper</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-root">
+    <div class="app-header">
+      <div class="app-title">
+        <div class="app-title-logo"></div>
+        AutoApply Helper
+      </div>
+      <div class="app-subtitle">Prefill job applications with your saved profile.</div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Current page</div>
+        <span class="panel-tag">Form detection</span>
+      </div>
+
+      <div class="popup-actions">
+        <button id="prefillBtn" class="btn btn-primary">⚡ Prefill this page</button>
+        <button id="openSettingsBtn" class="btn btn-secondary">⚙️ Open settings</button>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-dot"></div>
+        <span>Ready to scan inputs and textareas.</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
