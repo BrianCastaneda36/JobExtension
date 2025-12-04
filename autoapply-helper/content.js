@@ -37,7 +37,7 @@ function prefillPage() {
       chrome.storage.sync.set({ profile });
     }
 
-    const fields = document.querySelectorAll('input, textarea, select');
+    const fields = document.querySelectorAll('input, textarea, select, button[role="combobox"]');
 
     fields.forEach(field => {
       if (field.value && field.value.trim().length > 0) return;
@@ -57,6 +57,7 @@ function buildHintString(field) {
     field.name || '',
     field.id || '',
     field.placeholder || '',
+    field.getAttribute('aria-label') || '',
     getLabelTextForField(field)
   ];
   return parts.join(' ').toLowerCase();
@@ -116,7 +117,13 @@ function mapHintToValue(hint, profile) {
 }
 
 function fillField(field, value) {
-  if (field.tagName === 'SELECT') {
+  if (field.tagName === 'BUTTON' && field.getAttribute('role') === 'combobox') {
+    field.click();
+    setTimeout(() => {
+      const dropdown = findAutocompleteDropdown(field, value);
+      if (dropdown) selectFromDropdown(dropdown, value);
+    }, 300);
+  } else if (field.tagName === 'SELECT') {
     const options = Array.from(field.options);
     let match = options.find(opt => 
       opt.value === value || 
