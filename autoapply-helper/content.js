@@ -51,12 +51,25 @@ function getLabelTextForField(field) {
 }
 
 function mapHintToValue(hint, profile) {
+  if (hint.includes('country code') || (hint.includes('country') && hint.includes('code'))) return '+1';
+  if (hint.includes('country') && !hint.includes('code')) return 'United States';
+  if (hint.includes('first name') || hint.includes('firstname') || hint.includes('preferred first name')) {
+    return profile.fullName.split(' ')[0];
+  }
+  if (hint.includes('last name') || hint.includes('lastname') || hint.includes('surname')) {
+    const parts = profile.fullName.split(' ');
+    return parts[parts.length - 1];
+  }
+  if (hint.includes('middle name') || hint.includes('middlename')) {
+    const parts = profile.fullName.split(' ');
+    return parts.length > 2 ? parts[1] : '';
+  }
   if (hint.includes('email')) return profile.email;
   if (hint.includes('phone') || hint.includes('mobile')) return profile.phone;
   if (hint.includes('linkedin')) return profile.linkedinUrl;
   if (hint.includes('portfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github')) return profile.portfolioUrl;
   if (hint.includes('resume') && !hint.includes('summary')) return profile.resumeUrl;
-  if (hint.includes('location') || hint.includes('city') || hint.includes('country')) return profile.location;
+  if (hint.includes('location') || hint.includes('city')) return profile.location;
   if (hint.includes('authorization') || hint.includes('visa')) return profile.workAuthorization;
   if (hint.includes('availability') || hint.includes('start date') || hint.includes('notice')) return profile.availability;
   if (hint.includes('about yourself') || hint.includes('about you') || hint.includes('tell us about yourself')) return profile.aboutYou;
@@ -74,11 +87,17 @@ function mapHintToValue(hint, profile) {
 function fillField(field, value) {
   if (field.tagName === 'SELECT') {
     const options = Array.from(field.options);
-    const match = options.find(opt => 
-      opt.text.toLowerCase().includes(value.toLowerCase().split(' ')[0]) ||
-      value.toLowerCase().includes(opt.text.toLowerCase())
+    let match = options.find(opt => 
+      opt.value === value || 
+      opt.text === value ||
+      opt.text.toLowerCase().includes(value.toLowerCase()) ||
+      (value === '+1' && (opt.value === '+1' || opt.value === '1' || opt.text.includes('United States') || opt.text.includes('USA'))) ||
+      (value === 'United States' && (opt.text.includes('United States') || opt.text.includes('USA') || opt.value === 'US' || opt.value === 'USA'))
     );
-    if (match) field.value = match.value;
+    if (match) {
+      field.value = match.value;
+      field.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   } else if (field.type === 'number') {
     const numMatch = value.match(/\d+/);
     if (numMatch) field.value = numMatch[0];
