@@ -19,44 +19,8 @@ const defaultProfile = {
   remotePreference: "Remote-first, ideally working core hours in US Eastern time. I'm comfortable collaborating asynchronously with distributed teams, and I value clear written communication, well-defined ownership, and a culture that trusts engineers to manage their time and deliver outcomes."
 };
 
-const fields = [
-  'fullName', 'email', 'phone', 'location', 'linkedinUrl', 'portfolioUrl', 'username', 'password',
-  'desiredTitle', 'expectedSalaryYearly', 'expectedSalaryHourly', 'availability',
-  'workAuthorization', 'aboutYou', 'whyThisRoleTemplate', 'strengths', 'remotePreference'
-];
-
-document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.sync.get('profile', (data) => {
-    const profile = data.profile || defaultProfile;
-    
-    if (!data.profile) {
-      chrome.storage.sync.set({ profile: defaultProfile });
-    }
-    
-    fields.forEach(field => {
-      const element = document.getElementById(field);
-      if (element) element.value = profile[field] || '';
-    });
-  });
-
-  document.getElementById('saveBtn').addEventListener('click', () => {
-    const profile = {};
-    fields.forEach(field => {
-      const element = document.getElementById(field);
-      if (element) profile[field] = element.value;
-    });
-
-    chrome.storage.sync.set({ profile }, () => {
-      const status = document.getElementById('saveStatus');
-      const btn = document.getElementById('saveBtn');
-      
-      btn.textContent = '✓ Saved!';
-      status.classList.add('show');
-      
-      setTimeout(() => {
-        btn.textContent = '💾 Save profile';
-        status.classList.remove('show');
-      }, 2000);
-    });
-  });
+chrome.storage.sync.get('profile', (data) => {
+  if (!data.profile) {
+    chrome.storage.sync.set({ profile: defaultProfile });
+  }
 });

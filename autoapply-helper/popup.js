@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const prefillBtn = document.getElementById('prefillBtn');
   const openSettingsBtn = document.getElementById('openSettingsBtn');
+  const openTrackerBtn = document.getElementById('openTrackerBtn');
 
   prefillBtn.addEventListener('click', async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -11,6 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  if (openTrackerBtn) {
+    openTrackerBtn.addEventListener('click', () => {
+      chrome.tabs.create({ url: 'tracker.html' });
+    });
+  }
 
   openSettingsBtn.addEventListener('click', () => {
     chrome.runtime.openOptionsPage();

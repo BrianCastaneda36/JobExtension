@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Tracker - JobSeeker Pro+</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-root app-root--tracker">
+    <div class="app-header">
+      <div class="app-title">
+        <div class="app-title-logo"></div>
+        <span class="brand-name">Job Tracker</span>
+      </div>
+      <div class="app-subtitle">Track your applications</div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value" id="totalApps">0</div>
+        <div class="metric-label">Total Applications</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="last7Days">0</div>
+        <div class="metric-label">Last 7 Days</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="interviewCount">0</div>
+        <div class="metric-label">Interviews</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="offerCount">0</div>
+        <div class="metric-label">Offers</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="tracker-controls">
+        <input type="text" id="searchBox" class="form-input form-input--search" placeholder="Search by company or job title...">
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="APPLIED">Applied</button>
+          <button class="filter-pill" data-filter="REVIEWING">Reviewing</button>
+          <button class="filter-pill" data-filter="INTERVIEW">Interview</button>
+          <button class="filter-pill" data-filter="OFFER">Offer</button>
+          <button class="filter-pill" data-filter="REJECTED">Rejected</button>
+        </div>
+      </div>
+
+      <div id="jobsList" class="jobs-list"></div>
+    </div>
+
+    <div id="detailModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle"></h3>
+          <button id="closeModal" class="btn-close">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Status</label>
+              <select id="modalStatus" class="form-input"></select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Job URL</label>
+              <a id="modalUrl" class="job-link" target="_blank"></a>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Notes</label>
+              <textarea id="modalNotes" class="form-textarea"></textarea>
+            </div>
+          </div>
+          <button id="saveModalBtn" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="tracker.js"></script>
+</body>
+</html>
