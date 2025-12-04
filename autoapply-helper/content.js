@@ -10,10 +10,15 @@ function getDefaultProfile() {
     username: "Brianc3986",
     password: "Emma3786!!",
     desiredTitle: "Software Engineer / Full Stack Engineer / Data Engineer",
-    expectedSalaryYearly: "$105,000 – $135,000 USD (flexible based on level, scope, and benefits)",
-    expectedSalaryHourly: "$55 – $70/hr USD (flexible based on project and duration)",
+    expectedSalaryYearly: "$105,000 - $135,000 USD (flexible based on level, scope, and benefits)",
+    expectedSalaryHourly: "$55 - $70/hr USD (flexible based on project and duration)",
     workAuthorization: "US citizen, authorized to work for US employers. Open to fully remote roles while residing in Colombia, aligned to US Eastern time.",
-    availability: "Currently employed; available to start within 2–3 weeks of offer. Open to discussing earlier or phased start if needed.",
+    availability: "Currently employed; available to start within 2-3 weeks of offer. Open to discussing earlier or phased start if needed.",
+    disabilityStatus: "I prefer not to say",
+    veteranStatus: "I am not a protected veteran",
+    googleClientId: "",
+    grokApiKey: "",
+    resumeSummary: "",
     aboutYou: "I'm a software engineer and data-focused product professional with a background in credit risk, analytics, and automation. I've shipped internal tools, dashboards, and integrations using Python, SQL, Alteryx, and JavaScript/TypeScript that reduce manual work and give teams clearer visibility into their metrics. I enjoy owning problems end-to-end: clarifying requirements with stakeholders, designing a simple architecture, and then implementing, testing, and iterating on real-world feedback. I'm comfortable working remotely, communicating async, and collaborating across product, engineering, and operations.",
     whyThisRoleTemplate: "I'm excited about the {role} opportunity at {company} because it sits right at the intersection of engineering, data, and real business impact. I enjoy working on products where better tooling, automation, and analytics directly improve user outcomes and company performance. From my experience building internal dashboards, Python tools, and backend integrations, I've seen how much leverage a strong engineering team can create, and I'm looking for a place where I can contribute hands-on, ship quickly, and grow with a remote-first, high-ownership culture like yours.",
     strengths: "My strengths are: (1) turning messy, real-world requirements into clear technical plans and small, shippable pieces; (2) building reliable tools and automation in Python, SQL, and JavaScript that reduce manual work and improve decision-making; and (3) communicating clearly with non-technical stakeholders so we're aligned on outcomes, trade-offs, and timelines. I'm comfortable working independently in a remote environment, asking the right questions early, and taking ownership of results instead of just tickets.",
@@ -52,12 +57,18 @@ function prefillPage() {
     const fields = document.querySelectorAll('input, textarea, select, button[role="combobox"]');
 
     fields.forEach(field => {
-      if (hasMeaningfulValue(field)) return;
+      try {
+        if (field.type === 'file') return; // don't try to auto-fill file inputs (e.g., resume upload)
+        if (hasMeaningfulValue(field)) return;
 
-      const hint = buildHintString(field);
-      const value = mapHintToValue(hint, profile);
+        const hint = buildHintString(field);
+        const value = mapHintToValue(hint, profile);
 
-      if (value) fillField(field, value);
+        if (value) fillField(field, value);
+      } catch (err) {
+        // Keep going even if a single field errors (e.g., browser-restricted fields)
+        console.warn('Auto-fill skipped field due to error:', err);
+      }
     });
     
     createJobApplicationEntry();
@@ -108,11 +119,22 @@ function hasMeaningfulValue(field) {
   return !(placeholderUrl.test(value) || placeholderLinkedIn.test(value) || placeholderBare.test(value));
 }
 
+function normalizeText(str) {
+  return (str || '').toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function isPreferNot(text) {
+  const normalized = normalizeText(text);
+  return /prefer not|do not wish|do not want|decline|opt out|not disclose|not specify|not say|decline to state/.test(normalized);
+}
+
 function mapHintToValue(hint, profile) {
   if (hint.includes('linkedin') || hint.includes('linked in')) return profile.linkedinUrl;
   if (hint.includes('portfolio') || hint.includes('porfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github') || hint.includes('personal website')) return profile.portfolioUrl;
   if (hint.includes('country code') || (hint.includes('country') && hint.includes('code'))) return '+1';
   if (hint.includes('country') && !hint.includes('code')) return 'United States';
+  if (hint.includes('disability')) return profile.disabilityStatus;
+  if (hint.includes('veteran') || hint.includes('military service') || hint.includes('armed forces')) return profile.veteranStatus;
   if (hint.includes('first name') || hint.includes('firstname') || hint.includes('preferred first name')) {
     return profile.fullName.split(' ')[0];
   }
@@ -162,21 +184,23 @@ function fillField(field, value) {
           const dropdown = findAutocompleteDropdown(input, value);
           if (dropdown) selectFromDropdown(dropdown, value);
         }, 500);
+      } else {
+        // Some custom dropdowns are purely click-based.
+        const dropdown = findAutocompleteDropdown(field, value);
+        if (dropdown) selectFromDropdown(dropdown, value);
       }
     }, 300);
   } else if (field.tagName === 'SELECT') {
     const options = Array.from(field.options);
-    let match = options.find(opt => 
-      opt.value === value || 
-      opt.text === value ||
-      opt.text.toLowerCase().includes(value.toLowerCase()) ||
-      (value === '+1' && (opt.value === '+1' || opt.value === '1' || opt.text.includes('United States') || opt.text.includes('USA'))) ||
-      (value === 'United States' && (opt.text.includes('United States') || opt.text.includes('USA') || opt.value === 'US' || opt.value === 'USA'))
-    );
+    let match = options.find(opt => optionMatches(opt, value));
     if (match) {
       field.value = match.value;
+      match.selected = true;
+      field.dispatchEvent(new Event('input', { bubbles: true }));
       field.dispatchEvent(new Event('change', { bubbles: true }));
     }
+  } else if (field.type === 'radio') {
+    selectRadioOption(field, value);
   } else if (field.type === 'number') {
     const numMatch = value.match(/\d+/);
     if (numMatch) field.value = numMatch[0];
@@ -197,9 +221,15 @@ function fillField(field, value) {
 function findAutocompleteDropdown(field, value) {
   const selectors = [
     '[role="listbox"]',
+    'ul[role="listbox"]',
     '[role="menu"]',
+    '[id*="listbox"]',
     '.autocomplete-dropdown',
     '.dropdown-menu',
+    '.Select-menu-outer',
+    '[data-radix-collection-root]',
+    '[data-automation*="options"]',
+    '[data-testid*="options"]',
     'ul[class*="suggest"]',
     'ul[class*="autocomplete"]',
     'div[class*="dropdown"]',
@@ -218,15 +248,64 @@ function findAutocompleteDropdown(field, value) {
 
 function selectFromDropdown(dropdown, value) {
   const items = dropdown.querySelectorAll('[role="option"], li, div[class*="option"]');
-  const valueLower = value.toLowerCase();
-  const cityName = value.split(',')[0].trim().toLowerCase();
   
   for (const item of items) {
-    const text = item.textContent.toLowerCase().trim();
-    if (text.includes(valueLower) || text.includes(cityName)) {
+    const text = item.textContent || '';
+    const dataValue = item.getAttribute('data-value') || '';
+    if (optionMatches({ textContent: text, value: dataValue }, value)) {
       item.click();
       item.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       item.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+      break;
+    }
+  }
+}
+
+function optionMatches(option, desiredValue) {
+  const rawOptionText = typeof option === 'string'
+    ? option
+    : (option.text || option.textContent || option.getAttribute?.('data-value') || option.value || '');
+  const rawOptionValue = typeof option === 'string'
+    ? option
+    : (option.value || option.getAttribute?.('data-value') || rawOptionText);
+
+  const optText = normalizeText(rawOptionText);
+  const optValue = normalizeText(rawOptionValue);
+  const desired = normalizeText(desiredValue);
+
+  if (!desired) return false;
+  if (optText === desired || optValue === desired) return true;
+  if (optText.includes(desired) || optValue.includes(desired)) return true;
+  if (isPreferNot(desired) && isPreferNot(optText)) return true;
+
+  // Special handling for country code and US variants
+  if (desired === '+1' && (optValue === '+1' || optValue === '1' || optText.includes('united states') || optText.includes('usa'))) {
+    return true;
+  }
+  if (desired === 'united states' && (optText.includes('united states') || optText.includes('usa') || optValue === 'us' || optValue === 'usa')) {
+    return true;
+  }
+
+  return false;
+}
+
+function selectRadioOption(field, desiredValue) {
+  const desired = normalizeText(desiredValue);
+  if (!field.name) return;
+
+  const group = Array.from(document.querySelectorAll(`input[type="radio"][name="${field.name}"]`));
+  for (const radio of group) {
+    const labelText = getLabelTextForField(radio);
+    const radioValue = radio.value || '';
+
+    if (!desired) continue;
+    if (optionMatches({ textContent: labelText, value: radioValue }, desiredValue)) {
+      if (!radio.checked) {
+        radio.checked = true;
+        radio.dispatchEvent(new Event('input', { bubbles: true }));
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+        radio.dispatchEvent(new Event('click', { bubbles: true }));
+      }
       break;
     }
   }
@@ -279,21 +358,24 @@ function extractSource(hostname) {
 
 async function createJobApplicationEntry() {
   const jobInfo = detectJobInfo();
-  
-  const newApp = {
-    id: Date.now().toString(36) + Math.random().toString(36).substr(2),
-    company: jobInfo.company,
-    jobTitle: jobInfo.jobTitle,
-    source: jobInfo.source,
-    location: '',
-    appliedAt: new Date().toISOString(),
-    status: 'APPLIED',
-    lastStatusUpdate: new Date().toISOString(),
-    notes: '',
-    url: jobInfo.url
-  };
-  
-  chrome.storage.sync.get('jobApplications', (data) => {
+
+  chrome.storage.sync.get(['jobApplications', 'profile'], (data) => {
+    const profile = data.profile || getDefaultProfile();
+    const newApp = {
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+      company: jobInfo.company,
+      jobTitle: jobInfo.jobTitle,
+      source: jobInfo.source,
+      location: profile.location || '',
+      salaryExpectation: profile.expectedSalaryYearly || '',
+      remotePreference: profile.remotePreference || '',
+      appliedAt: new Date().toISOString(),
+      status: 'APPLIED',
+      lastStatusUpdate: new Date().toISOString(),
+      notes: '',
+      url: jobInfo.url
+    };
+    
     const apps = data.jobApplications || [];
     const exists = apps.find(a => 
       a.url === newApp.url || 

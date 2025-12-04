@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JobSeeker Pro+ - Settings</title>
+  <link rel="icon" type="image/png" href="JobSeekerProLogo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -83,6 +84,130 @@
             <input type="text" id="workAuthorization" class="form-input">
           </div>
         </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Integrations</div>
+          <div class="form-helper">Store your Google OAuth Client ID for future integrations and exporting.</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="googleClientId">Google OAuth Client ID</label>
+            <input type="text" id="googleClientId" class="form-input" placeholder="xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">AI drafting (Grok)</div>
+            <div class="form-helper">Use Grok to tailor long-form answers to a specific role/company. We keep the key locally.</div>
+          </div>
+          <div id="grokStatus" class="save-status"></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="grokApiKey">Grok API Key</label>
+            <input type="password" id="grokApiKey" class="form-input" placeholder="xai-...">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeSummary">Resume Summary (paste a short summary)</label>
+            <textarea id="resumeSummary" class="form-textarea" placeholder="Short summary of your experience and stack."></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeFile">Resume file (PDF, DOC, or image)</label>
+            <input type="file" id="resumeFile" class="form-input" accept=".pdf,.doc,.docx,.txt,image/*">
+            <div class="form-helper">File stays local; content is sent to Grok for extraction.</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="targetRole">Target Role</label>
+            <input type="text" id="targetRole" class="form-input" placeholder="e.g., Senior Software Engineer">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="targetCompany">Target Company</label>
+            <input type="text" id="targetCompany" class="form-input" placeholder="e.g., Acme Corp">
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-label" for="jobDescription">Job Description (optional, paste summary)</label>
+            <textarea id="jobDescription" class="form-textarea" placeholder="Paste the main responsibilities/requirements to tailor the answers."></textarea>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="generateGrokBtn" class="btn btn-primary">Generate tailored answers</button>
+          <button id="extractResumeBtn" class="btn btn-secondary">Extract from resume file</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">EEO / self-identification</div>
+          <div class="form-helper">Used for disability/veteran questions. Edit to match your preferred response text.</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="disabilityStatus">Disability Status</label>
+            <select id="disabilityStatus" class="form-input">
+              <option value="I prefer not to say">I prefer not to say (default)</option>
+              <option value="Yes, I have a disability">Yes, I have a disability</option>
+              <option value="No, I do not have a disability">No, I do not have a disability</option>
+              <option value="I do not wish to answer">I do not wish to answer</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="veteranStatus">Veteran Status</label>
+            <select id="veteranStatus" class="form-input">
+              <option value="I am not a protected veteran">I am not a protected veteran (default)</option>
+              <option value="I am a protected veteran">I am a protected veteran</option>
+              <option value="I am not a veteran">I am not a veteran</option>
+              <option value="I do not wish to answer">I do not wish to answer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Application tracker</div>
+            <div class="form-helper">Snapshot of recently auto-logged applications. Open the full tracker to edit statuses.</div>
+          </div>
+          <button id="openTrackerBtn" class="btn btn-secondary btn-ghost">Open full tracker</button>
+        </div>
+
+        <div class="metrics-grid metrics-grid--compact">
+          <div class="metric-card">
+            <div class="metric-value" id="trackerTotal">0</div>
+            <div class="metric-label">Total</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerLast7">0</div>
+            <div class="metric-label">Last 7 days</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerInterview">0</div>
+            <div class="metric-label">Interviewing</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerOffer">0</div>
+            <div class="metric-label">Offers</div>
+          </div>
+        </div>
+
+        <div class="tracker-controls">
+          <input type="text" id="trackerSearch" class="form-input form-input--search" placeholder="Search by company or job title...">
+          <div class="filter-pills" id="trackerFilters">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="APPLIED">Applied</button>
+            <button class="filter-pill" data-filter="REVIEWING">Reviewing</button>
+            <button class="filter-pill" data-filter="INTERVIEW">Interview</button>
+            <button class="filter-pill" data-filter="OFFER">Offer</button>
+            <button class="filter-pill" data-filter="REJECTED">Rejected</button>
+          </div>
+        </div>
+
+        <div id="trackerList" class="jobs-list jobs-list--compact"></div>
       </div>
 
       <div class="panel">

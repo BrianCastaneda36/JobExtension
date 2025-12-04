@@ -87,8 +87,10 @@ function displayJobs(jobs) {
         <span class="status-pill status-pill--${app.status.toLowerCase()}">${app.status}</span>
       </div>
       <div class="job-card-meta">
-        <span>📍 ${app.source}</span>
-        <span>📅 ${formatDate(app.appliedAt)}</span>
+        <span>Source: ${app.source || 'Direct'}</span>
+        <span>Applied: ${formatDate(app.appliedAt)}</span>
+        ${app.salaryExpectation ? `<span>Salary: ${app.salaryExpectation}</span>` : ''}
+        ${app.remotePreference ? `<span>${app.remotePreference}</span>` : ''}
       </div>
     </div>
   `).join('');
