@@ -3,11 +3,21 @@
   "name": "JobSeeker Pro+",
   "version": "1.0.0",
   "description": "Automatically prefills common job application fields using your saved profile and answers.",
+  "icons": {
+    "16": "JobSeekerProLogo.png",
+    "48": "JobSeekerProLogo.png",
+    "128": "JobSeekerProLogo.png"
+  },
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "JobSeeker Pro+"
+    "default_title": "JobSeeker Pro+",
+    "default_icon": {
+      "16": "JobSeekerProLogo.png",
+      "48": "JobSeekerProLogo.png",
+      "128": "JobSeekerProLogo.png"
+    }
   },
   "options_page": "options.html",
   "background": {
