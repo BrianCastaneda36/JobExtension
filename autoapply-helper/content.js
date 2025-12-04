@@ -96,8 +96,8 @@ function mapHintToValue(hint, profile) {
   if (hint.includes('password') || hint.includes('confirm password')) return profile.password;
   if (hint.includes('email')) return profile.email;
   if (hint.includes('phone') || hint.includes('mobile')) return profile.phone;
-  if (hint.includes('linkedin')) return profile.linkedinUrl;
-  if (hint.includes('portfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github') || hint.includes('personal website')) return profile.portfolioUrl;
+  if (hint.includes('linkedin') || hint.includes('linked in')) return profile.linkedinUrl;
+  if (hint.includes('portfolio') || hint.includes('porfolio') || hint.includes('website') || hint.includes('personal site') || hint.includes('github') || hint.includes('personal website')) return profile.portfolioUrl;
   if (hint.includes('resume') && !hint.includes('summary')) return profile.resumeUrl;
   if (hint.includes('current location') || hint.includes('location') || hint.includes('city')) {
     return profile.location;
@@ -120,8 +120,19 @@ function fillField(field, value) {
   if (field.tagName === 'BUTTON' && field.getAttribute('role') === 'combobox') {
     field.click();
     setTimeout(() => {
-      const dropdown = findAutocompleteDropdown(field, value);
-      if (dropdown) selectFromDropdown(dropdown, value);
+      const input = document.querySelector('input[type="text"]:focus, input[aria-label*="location"], input[placeholder*="location"]');
+      if (input) {
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
+        input.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+        
+        setTimeout(() => {
+          const dropdown = findAutocompleteDropdown(input, value);
+          if (dropdown) selectFromDropdown(dropdown, value);
+        }, 500);
+      }
     }, 300);
   } else if (field.tagName === 'SELECT') {
     const options = Array.from(field.options);
