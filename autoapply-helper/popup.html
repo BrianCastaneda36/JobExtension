@@ -22,6 +22,7 @@
         <div class="panel-title">Current page</div>
         <span class="panel-tag">Form detection</span>
       </div>
+      <div class="form-helper" style="margin-bottom:8px;">Use “Prefill this page” on the job form you’re viewing. “Open settings” edits your profile.</div>
 
       <div class="popup-actions">
         <button id="prefillBtn" class="btn btn-primary">⚡ Prefill this page</button>
@@ -31,6 +32,32 @@
       <div class="status-bar">
         <div class="status-dot"></div>
         <span>Ready to scan inputs and textareas.</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Quick snippets</div>
+        <span class="panel-tag">Copy-ready</span>
+      </div>
+      <div class="form-helper" style="margin-bottom:8px;">Click to copy answers saved in Settings → Quick snippets.</div>
+      <div class="popup-actions">
+        <button class="btn btn-secondary" data-copy-snippet="availabilitySnippet" data-label="Availability">Availability</button>
+        <button class="btn btn-secondary" data-copy-snippet="relocationSnippet" data-label="Relocation">Relocation</button>
+        <button class="btn btn-secondary" data-copy-snippet="clearanceSnippet" data-label="Clearance">Clearance</button>
+        <button class="btn btn-secondary" data-copy-snippet="portfolioSnippet" data-label="Portfolio">Portfolio highlight</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Mass apply</div>
+        <span class="panel-tag">Queue runner</span>
+      </div>
+      <div class="form-helper" style="margin-bottom:8px;">Add job URLs in Settings → Job queue, then run “Start mass apply” to open each with autofill.</div>
+      <div class="popup-actions">
+        <button id="startMassApplyBtn" class="btn btn-primary">Start mass apply</button>
+        <div class="form-helper">Opens each queued job in new tabs with short delays and autofills.</div>
       </div>
     </div>
   </div>

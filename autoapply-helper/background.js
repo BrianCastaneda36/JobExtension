@@ -21,6 +21,15 @@ chrome.runtime.onInstalled.addListener(() => {
         googleClientId: "",
         grokApiKey: "",
         resumeSummary: "",
+        emphasizeKeywords: true,
+        mockMode: false,
+        grokLastGeneratedAt: "",
+        grokLastExtractedAt: "",
+        roleBullets: "",
+        companySnapshot: "",
+        whyUsPoints: "",
+        resumeVariants: [],
+        activeResumeName: "",
         aboutYou: "I'm a software engineer and data-focused product professional with a background in credit risk, analytics, and automation. I've shipped internal tools, dashboards, and integrations using Python, SQL, Alteryx, and JavaScript/TypeScript that reduce manual work and give teams clearer visibility into their metrics. I enjoy owning problems end-to-end: clarifying requirements with stakeholders, designing a simple architecture, and then implementing, testing, and iterating on real-world feedback. I'm comfortable working remotely, communicating async, and collaborating across product, engineering, and operations.",
         whyThisRoleTemplate: "I'm excited about the {role} opportunity at {company} because it sits right at the intersection of engineering, data, and real business impact. I enjoy working on products where better tooling, automation, and analytics directly improve user outcomes and company performance. From my experience building internal dashboards, Python tools, and backend integrations, I've seen how much leverage a strong engineering team can create, and I'm looking for a place where I can contribute hands-on, ship quickly, and grow with a remote-first, high-ownership culture like yours.",
         strengths: "My strengths are: (1) turning messy, real-world requirements into clear technical plans and small, shippable pieces; (2) building reliable tools and automation in Python, SQL, and JavaScript that reduce manual work and improve decision-making; and (3) communicating clearly with non-technical stakeholders so we're aligned on outcomes, trade-offs, and timelines. I'm comfortable working independently in a remote environment, asking the right questions early, and taking ownership of results instead of just tickets.",
@@ -29,4 +38,26 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.storage.sync.set({ profile: defaultProfile });
     }
   });
+});
+
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === 'prefill-current-page') {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab?.id) {
+      chrome.tabs.sendMessage(tab.id, { type: 'PREFILL_FORM' });
+    }
+  } else if (command === 'open-settings') {
+    chrome.runtime.openOptionsPage();
+  } else if (command === 'open-tracker') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('tracker.html') });
+  }
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'OPEN_SETTINGS') {
+    chrome.runtime.openOptionsPage();
+  }
+  if (message.type === 'OPEN_TRACKER') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('tracker.html') });
+  }
 });

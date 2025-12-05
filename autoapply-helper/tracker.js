@@ -24,6 +24,10 @@ function setupEventListeners() {
   });
   
   document.getElementById('saveModalBtn').addEventListener('click', saveModalChanges);
+  const scanBtn = document.getElementById('scanRejectionsBtn');
+  if (scanBtn) {
+    scanBtn.addEventListener('click', scanForRejections);
+  }
 }
 
 async function loadAndDisplayJobs() {
@@ -77,23 +81,33 @@ function displayJobs(jobs) {
     return;
   }
   
-  container.innerHTML = jobs.map(app => `
+  container.innerHTML = jobs.map(app => {
+    const stalled = isStalled(app);
+    const salaryLine = app.salaryExpectation ? `Est: ${app.salaryExpectation}${app.salaryLocation ? ` (${app.salaryLocation})` : ''}` : '';
+    const remoteLine = app.remotePreference || '';
+    const followUpLine = app.followUpDone ? 'Follow-up done' : (app.followUpDue ? `Follow-up by ${formatDate(app.followUpDue)}` : '');
+    return `
     <div class="job-card" data-id="${app.id}">
       <div class="job-card-header">
         <div>
           <div class="job-company">${app.company}</div>
           <div class="job-title">${app.jobTitle}</div>
         </div>
-        <span class="status-pill status-pill--${app.status.toLowerCase()}">${app.status}</span>
+        <div class="status-group">
+          ${stalled ? '<span class="status-pill status-pill--stalled">Stalled</span>' : ''}
+          <span class="status-pill status-pill--${app.status.toLowerCase()}">${app.status}</span>
+        </div>
       </div>
       <div class="job-card-meta">
         <span>Source: ${app.source || 'Direct'}</span>
         <span>Applied: ${formatDate(app.appliedAt)}</span>
-        ${app.salaryExpectation ? `<span>Salary: ${app.salaryExpectation}</span>` : ''}
-        ${app.remotePreference ? `<span>${app.remotePreference}</span>` : ''}
+        ${salaryLine ? `<span>${salaryLine}</span>` : ''}
+        ${remoteLine ? `<span>${remoteLine}</span>` : ''}
+        ${followUpLine ? `<span>${followUpLine}</span>` : ''}
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
   
   container.querySelectorAll('.job-card').forEach(card => {
     card.addEventListener('click', () => openJobDetail(card.dataset.id));
@@ -119,8 +133,16 @@ function openJobDetail(id) {
   } else {
     urlLink.style.display = 'none';
   }
-  
+
   document.getElementById('modalNotes').value = currentApp.notes || '';
+  const localNotesEl = document.getElementById('modalLocalNotes');
+  if (localNotesEl) {
+    localNotesEl.value = currentApp.localNotes || '';
+  }
+  const followUpCheckbox = document.getElementById('modalFollowUpDone');
+  if (followUpCheckbox) {
+    followUpCheckbox.checked = Boolean(currentApp.followUpDone);
+  }
   document.getElementById('detailModal').style.display = 'flex';
 }
 
@@ -129,6 +151,14 @@ async function saveModalChanges() {
   
   currentApp.status = document.getElementById('modalStatus').value;
   currentApp.notes = document.getElementById('modalNotes').value;
+  const followUpCheckbox = document.getElementById('modalFollowUpDone');
+   if (followUpCheckbox) {
+     currentApp.followUpDone = followUpCheckbox.checked;
+   }
+  const localNotesEl = document.getElementById('modalLocalNotes');
+  if (localNotesEl) {
+    currentApp.localNotes = localNotesEl.value;
+  }
   currentApp.lastStatusUpdate = new Date().toISOString();
   
   await chrome.storage.sync.set({ jobApplications: allApps });
@@ -147,4 +177,32 @@ function formatDate(isoString) {
   if (diffDays < 7) return `${diffDays} days ago`;
   
   return date.toLocaleDateString();
+}
+
+function isStalled(app) {
+  const closedStatuses = ['REJECTED', 'OFFER', 'CLOSED'];
+  if (closedStatuses.includes(app.status)) return false;
+  const applied = app.appliedAt ? new Date(app.appliedAt).getTime() : 0;
+  const now = Date.now();
+  const diffDays = (now - applied) / (1000 * 60 * 60 * 24);
+  return diffDays > 14;
+}
+
+async function scanForRejections() {
+  const keywords = ['unfortunately', 'regret to inform', 'not moving forward', 'rejection', 'decline', 'not selected'];
+  let updates = 0;
+  allApps.forEach(app => {
+    const text = `${app.notes || ''} ${app.localNotes || ''}`.toLowerCase();
+    if (keywords.some(k => text.includes(k))) {
+      if (app.status !== 'REJECTED') {
+        app.status = 'REJECTED';
+        app.lastStatusUpdate = new Date().toISOString();
+        updates++;
+      }
+    }
+  });
+  if (updates > 0) {
+    await chrome.storage.sync.set({ jobApplications: allApps });
+    loadAndDisplayJobs();
+  }
 }

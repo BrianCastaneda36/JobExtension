@@ -10,6 +10,17 @@
   },
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["<all_urls>"],
+  "commands": {
+    "prefill-current-page": {
+      "description": "Prefill the current page"
+    },
+    "open-settings": {
+      "description": "Open JobSeeker Pro+ settings"
+    },
+    "open-tracker": {
+      "description": "Open Job Tracker"
+    }
+  },
   "action": {
     "default_popup": "popup.html",
     "default_title": "JobSeeker Pro+",

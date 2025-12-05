@@ -39,6 +39,11 @@ body {
   animation: slideIn 0.4s ease-out;
 }
 
+.app-root:not(.app-root--options) {
+  width: 320px;
+  padding: 16px;
+}
+
 @keyframes slideIn {
   from { transform: translateY(-10px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
@@ -47,9 +52,9 @@ body {
 .app-root--options {
   width: 100%;
   min-height: 100vh;
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 32px 16px;
 }
 
 .app-header {
@@ -106,16 +111,34 @@ body {
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 12px;
   box-shadow: 0 4px 16px var(--shadow);
   animation: panelSlide 0.5s ease-out;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .panel:hover {
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
-  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+  border-color: rgba(37, 99, 235, 0.35);
+  transform: translateY(-2px);
+}
+
+.panel--compact {
+  padding: 10px;
+}
+
+.panel--tile {
+  padding: 10px;
+  min-height: 0;
+}
+
+.app-root:not(.app-root--options) .panel {
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-actions .btn + .btn {
+  margin-top: 0;
 }
 
 @keyframes panelSlide {
@@ -124,7 +147,7 @@ body {
 }
 
 .panel-header {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .panel-title {
@@ -146,13 +169,13 @@ body {
 
 .btn {
   width: 100%;
-  padding: 12px 20px;
+  padding: 7px 10px;
   border: none;
-  border-radius: 24px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   font-family: inherit;
 }
 
@@ -182,17 +205,43 @@ body {
   background: #1e293b;
   border-color: var(--accent);
   transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
 }
 
 .btn-secondary:active {
   transform: translateY(0);
 }
 
+.btn-compact {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
 .popup-actions {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 16px;
+  margin: 12px 0 6px;
+}
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.panel-actions .btn {
+  width: auto;
+  flex: 1 1 140px;
+  max-width: 200px;
+}
+.popup-actions .btn {
+  width: auto;
+  flex: 1 1 120px;
+  max-width: 200px;
 }
 
 .status-bar {
@@ -230,7 +279,7 @@ body {
 
 .form-grid {
   display: grid;
-  gap: 16px;
+  gap: 14px;
 }
 
 .form-field {
@@ -276,6 +325,24 @@ body {
   font-size: 12px;
   color: var(--text-secondary);
   margin-top: 4px;
+}
+
+.input-with-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.input-with-actions .btn {
+  width: auto;
+  padding: 6px 10px;
+  border-radius: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-size: 12px;
 }
 
 .options-main {
@@ -633,4 +700,25 @@ body {
 .gmail-actions {
   display: flex;
   gap: 12px;
+}
+
+/* Dashboard layout for options */
+.options-main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.panel.span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .options-main {
+    grid-template-columns: 1fr;
+  }
+  .panel.span-2 {
+    grid-column: span 1;
+  }
 }

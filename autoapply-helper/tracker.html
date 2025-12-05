@@ -47,6 +47,7 @@
           <button class="filter-pill" data-filter="OFFER">Offer</button>
           <button class="filter-pill" data-filter="REJECTED">Rejected</button>
         </div>
+        <button id="scanRejectionsBtn" class="btn btn-ghost">Scan for rejection clues</button>
       </div>
 
       <div id="jobsList" class="jobs-list"></div>
@@ -69,8 +70,17 @@
               <a id="modalUrl" class="job-link" target="_blank"></a>
             </div>
             <div class="form-field">
+              <label class="form-label">
+                <input type="checkbox" id="modalFollowUpDone"> Follow-up done
+              </label>
+            </div>
+            <div class="form-field">
               <label class="form-label">Notes</label>
               <textarea id="modalNotes" class="form-textarea"></textarea>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Offline notes (local)</label>
+              <textarea id="modalLocalNotes" class="form-textarea" placeholder="Private notes stay on this device"></textarea>
             </div>
           </div>
           <button id="saveModalBtn" class="btn btn-primary">Save Changes</button>
