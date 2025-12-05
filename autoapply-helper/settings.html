@@ -743,18 +743,12 @@
                 </div>
               </div>
             </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
-              <span id="resumeStatus" style="padding: 6px 12px; background: #334155; border-radius: 6px; font-size: 12px; color: #94a3b8;">Not extracted</span>
+            <div class="btn-group">
               <button id="extractResumeBtn" class="btn btn-secondary">Extract from resume file</button>
               <button id="generateGrokBtn" class="btn btn-primary">Generate tailored answers</button>
               <button id="deleteExtractedBtn" class="btn btn-ghost">Delete extracted data</button>
-            </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
-              <span id="lastExtractedAt" style="padding: 6px 12px; background: #334155; border-radius: 6px; font-size: 12px; color: #94a3b8;">Last extract: n/a</span>
-              <span id="lastGeneratedAt" style="padding: 6px 12px; background: #334155; border-radius: 6px; font-size: 12px; color: #94a3b8;">Last generate: n/a</span>
               <button id="retryGrokBtn" class="btn btn-ghost">Retry last action</button>
             </div>
-            <div id="grokErrorLog" style="margin-top: 12px; padding: 12px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; color: #ef4444; font-size: 13px; display: none;"></div>
             <div id="grokStatus" class="status-message"></div>
           </div>
 
@@ -783,97 +777,6 @@
               </div>
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Profile Presets</h3>
-              <p class="card-desc">Save and switch between multiple profiles</p>
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-field">
-                <label class="form-label" for="profileSelect">Saved profiles</label>
-                <select id="profileSelect" class="form-select"></select>
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="profileName">Profile name</label>
-                <input type="text" id="profileName" class="form-input" placeholder="e.g., Full-stack, Data, Manager">
-              </div>
-            </div>
-            <div class="btn-group">
-              <button id="applyProfileBtn" class="btn btn-secondary">Apply selected</button>
-              <button id="saveProfileBtn" class="btn btn-primary">Save/overwrite</button>
-              <button id="deleteProfileBtn" class="btn btn-ghost">Delete selected</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Resume Variants</h3>
-              <p class="card-desc">Store multiple resume links and pick the active one</p>
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-field">
-                <label class="form-label" for="resumeVariantName">Variant name</label>
-                <input type="text" id="resumeVariantName" class="form-input" placeholder="e.g., Full-stack, Data">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="resumeVariantUrl">Variant URL</label>
-                <input type="url" id="resumeVariantUrl" class="form-input" placeholder="https://...">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="resumeVariantSelect">Saved variants</label>
-                <select id="resumeVariantSelect" class="form-select"></select>
-              </div>
-            </div>
-            <div class="btn-group">
-              <button id="addResumeVariantBtn" class="btn btn-primary">Save/overwrite variant</button>
-              <button id="applyResumeVariantBtn" class="btn btn-secondary">Set as active</button>
-              <button id="deleteResumeVariantBtn" class="btn btn-ghost">Delete variant</button>
-              <span id="activeResumeBadge" style="padding: 6px 12px; background: #334155; border-radius: 6px; font-size: 12px; color: #94a3b8;">Active: default</span>
-              <button id="exportTargetedResumeBtn" class="btn btn-ghost">Export targeted resume</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">AI Job Setup Assistant</h3>
-              <p class="card-desc">Describe the jobs you want and Grok will propose settings</p>
-            </div>
-            <div class="form-grid">
-              <div class="form-field">
-                <label class="form-label" for="jobSetupInput">Tell us about the jobs you want</label>
-                <textarea id="jobSetupInput" class="form-textarea" placeholder="e.g., remote senior full-stack roles, US Eastern time..."></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="jobSetupOutput">Assistant response</label>
-                <textarea id="jobSetupOutput" class="form-textarea" readonly></textarea>
-              </div>
-            </div>
-            <div class="btn-group">
-              <button id="jobSetupBtn" class="btn btn-primary">Suggest and apply</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Chat with Grok</h3>
-              <p class="card-desc">Ask questions about tailoring your profile or jobs</p>
-            </div>
-            <div class="form-grid">
-              <div class="form-field">
-                <label class="form-label" for="assistantChatInput">Message</label>
-                <textarea id="assistantChatInput" class="form-textarea" placeholder="Ask about a role, how to answer a question, etc."></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="assistantChatLog">Grok replies</label>
-                <textarea id="assistantChatLog" class="form-textarea" readonly placeholder="Replies will appear here."></textarea>
-              </div>
-            </div>
-            <div class="btn-group">
-              <button id="assistantAskBtn" class="btn btn-secondary">Send</button>
-              <button id="assistantClearBtn" class="btn btn-ghost">Clear</button>
-            </div>
-          </div>
         </section>
 
         <!-- Job Targeting Section -->
@@ -891,7 +794,6 @@
             <div class="btn-group">
               <button id="digestJDBtn" class="btn btn-primary">Digest JD</button>
               <button id="interviewPrepBtn" class="btn btn-secondary">Interview prep</button>
-              <button id="printPrepBtn" class="btn btn-ghost">Print/Preview</button>
             </div>
             <div class="form-grid cols-2">
               <div class="form-field">
@@ -909,22 +811,6 @@
               <div class="form-field">
                 <label class="form-label">Suggested keywords to add</label>
                 <textarea id="missingKeywords" class="form-textarea" readonly></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label">Recruiter outreach note</label>
-                <textarea id="recruiterNote" class="form-textarea"></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label">Follow-up note</label>
-                <textarea id="followupNote" class="form-textarea"></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label">Company snapshot</label>
-                <textarea id="companySnapshot" class="form-textarea" readonly></textarea>
-              </div>
-              <div class="form-field">
-                <label class="form-label">Why-us talking points</label>
-                <textarea id="whyUsPoints" class="form-textarea" readonly></textarea>
               </div>
               <div class="form-field">
                 <label class="form-label">Interview questions</label>
@@ -955,64 +841,6 @@
             <div class="btn-group">
               <button id="fetchSuggestionsBtn" class="btn btn-secondary">Get suggestions</button>
               <button id="queueSuggestionsBtn" class="btn btn-ghost">Add to queue</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Portfolio Links</h3>
-              <p class="card-desc">Store project links with tags for JD matching</p>
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-field">
-                <label class="form-label" for="projectName">Project name</label>
-                <input type="text" id="projectName" class="form-input" placeholder="e.g., Analytics Dashboard">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="projectUrl">Project URL</label>
-                <input type="url" id="projectUrl" class="form-input" placeholder="https://...">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="projectTags">Tags (comma separated)</label>
-                <input type="text" id="projectTags" class="form-input" placeholder="react, node, data">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="projectSelect">Saved projects</label>
-                <select id="projectSelect" class="form-select"></select>
-              </div>
-            </div>
-            <div class="btn-group">
-              <button id="saveProjectBtn" class="btn btn-primary">Save/overwrite project</button>
-              <button id="deleteProjectBtn" class="btn btn-ghost">Delete project</button>
-              <button id="matchPortfolioBtn" class="btn btn-secondary">Match portfolio to JD</button>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Suggested matches for this JD</label>
-              <textarea id="matchedProjects" class="form-textarea" readonly></textarea>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Salary Research</h3>
-              <p class="card-desc">Fetch market range for role/location</p>
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-field">
-                <label class="form-label" for="salaryRole">Role</label>
-                <input type="text" id="salaryRole" class="form-input" placeholder="e.g., Senior Software Engineer">
-              </div>
-              <div class="form-field">
-                <label class="form-label" for="salaryLocation">Location</label>
-                <input type="text" id="salaryLocation" class="form-input" placeholder="e.g., Orlando, FL">
-              </div>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Market salary estimate</label>
-              <textarea id="salaryEstimate" class="form-textarea" readonly></textarea>
-            </div>
-            <div class="btn-group">
-              <button id="salaryResearchBtn" class="btn btn-secondary">Fetch salary range</button>
             </div>
           </div>
         </section>
@@ -1088,18 +916,7 @@
             <div class="btn-group">
               <button id="openTrackerBtn" class="btn btn-primary">Open full tracker</button>
             </div>
-            <div style="margin-top: 20px;">
-              <input type="text" id="trackerSearch" class="form-input" placeholder="Search by company or job title..." style="margin-bottom: 12px;">
-              <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;" id="trackerFilters">
-                <button class="btn btn-ghost" data-filter="all" style="padding: 6px 12px; font-size: 13px;">All</button>
-                <button class="btn btn-ghost" data-filter="APPLIED" style="padding: 6px 12px; font-size: 13px;">Applied</button>
-                <button class="btn btn-ghost" data-filter="REVIEWING" style="padding: 6px 12px; font-size: 13px;">Reviewing</button>
-                <button class="btn btn-ghost" data-filter="INTERVIEW" style="padding: 6px 12px; font-size: 13px;">Interview</button>
-                <button class="btn btn-ghost" data-filter="OFFER" style="padding: 6px 12px; font-size: 13px;">Offer</button>
-                <button class="btn btn-ghost" data-filter="REJECTED" style="padding: 6px 12px; font-size: 13px;">Rejected</button>
-              </div>
-            </div>
-            <div id="trackerList"></div>
+            <div id="trackerList" style="margin-top: 20px;"></div>
           </div>
 
           <div class="card">
@@ -1187,10 +1004,7 @@
         <!-- Save Footer -->
         <div class="save-footer">
           <div class="save-footer-content">
-            <div>
-              <p class="save-footer-text">Changes are saved automatically</p>
-              <div id="saveStatus" style="font-size: 13px; color: #10b981; margin-top: 4px; opacity: 0; transition: opacity 0.3s;"></div>
-            </div>
+            <p class="save-footer-text">Changes are saved automatically</p>
             <button id="saveBtn" class="btn btn-primary">
               <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
               Save Profile
@@ -1201,7 +1015,38 @@
     </main>
   </div>
 
-  <script src="navigation.js"></script>
   <script src="options.js"></script>
+  <script>
+    // Navigation functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const navButtons = document.querySelectorAll('.nav-button');
+      const sections = document.querySelectorAll('.section');
+
+      navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetSection = button.dataset.section;
+          
+          // Update active nav button
+          navButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          
+          // Update active section
+          sections.forEach(section => section.classList.remove('active'));
+          document.getElementById(targetSection).classList.add('active');
+        });
+      });
+
+      // Copy button functionality
+      document.querySelectorAll('button[data-copy-src]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const src = btn.getAttribute('data-copy-src');
+          const value = document.getElementById(src)?.value || '';
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(value);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>

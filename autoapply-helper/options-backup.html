@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JobSeeker Pro+ - Settings</title>
+  <link rel="icon" type="image/png" href="JobSeekerProLogo.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-root app-root--options">
+    <div class="app-header">
+      <div class="app-title">
+        <div class="app-title-logo"></div>
+        <span class="brand-name">JobSeeker Pro+</span>
+      </div>
+      <div class="app-subtitle">Profile & answers used for autofill</div>
+    </div>
+
+    <div class="options-main">
+      <div class="panel span-2 panel--compact">
+        <div class="panel-header">
+          <div class="panel-title">How to use</div>
+        </div>
+        <div class="form-helper" style="margin-bottom:10px;">Quick start for the extension.</div>
+        <ul style="padding-left:16px; color:#cbd5f5; font-size:13px; line-height:1.5;">
+          <li>Fill your profile, URLs, snippets, and resume links in Settings, then click “Save profile”.</li>
+          <li>(Optional) Add job URLs to the Job queue. Enable auto-submit only if you trust the site.</li>
+          <li>On a job page, open the popup → “Prefill this page” (or press Ctrl+Shift+P palette on the page).</li>
+          <li>The tracker auto-logs the application. Open “Job Tracker” to edit statuses/notes.</li>
+          <li>Use “Get suggestions” to pull live roles, then “Add to queue” and run Mass apply from the popup.</li>
+          <li>For tailored answers, paste a JD + target role/company, then “Generate tailored answers”.</li>
+          <li>Chat with Grok in Settings if you need wording or setup help.</li>
+        </ul>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header">
+          <div class="panel-title">Basic profile</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="fullName">Full Name</label>
+            <input type="text" id="fullName" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="phone">Phone</label>
+            <input type="text" id="phone" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="location">Location</label>
+            <input type="text" id="location" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="linkedinUrl">LinkedIn URL</label>
+            <input type="url" id="linkedinUrl" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="portfolioUrl">Portfolio URL</label>
+            <input type="url" id="portfolioUrl" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="username">Username</label>
+            <input type="text" id="username" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Job preferences</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="desiredTitle">Desired Title</label>
+            <input type="text" id="desiredTitle" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="expectedSalaryYearly">Expected Salary (Yearly)</label>
+            <input type="text" id="expectedSalaryYearly" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="expectedSalaryHourly">Expected Salary (Hourly)</label>
+            <input type="text" id="expectedSalaryHourly" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="availability">Availability</label>
+            <input type="text" id="availability" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="workAuthorization">Work Authorization</label>
+            <input type="text" id="workAuthorization" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header">
+          <div class="panel-title">Integrations</div>
+          <div class="form-helper">Store your Google OAuth Client ID for future integrations and exporting.</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="googleClientId">Google OAuth Client ID</label>
+            <input type="text" id="googleClientId" class="form-input" placeholder="xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">AI drafting (Grok)</div>
+            <div class="form-helper">Use Grok to tailor long-form answers to a specific role/company. Key stays local; resume uploads are sent to Grok for parsing.</div>
+          </div>
+          <div id="grokStatus" class="save-status"></div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="grokApiKey">Grok API Key</label>
+            <div class="input-with-actions">
+              <input type="password" id="grokApiKey" class="form-input" placeholder="xai-...">
+              <button id="clearGrokKeyBtn" class="btn btn-ghost" type="button">Clear</button>
+              <button id="importGrokKeyBtn" class="btn btn-ghost" type="button">Import key file</button>
+              <input type="file" id="grokKeyFile" style="display:none" accept=".txt">
+            </div>
+            <div class="form-helper">Stored locally (Chrome sync). Do not ship production keys.</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeSummary">Resume Summary (paste a short summary)</label>
+            <textarea id="resumeSummary" class="form-textarea" placeholder="Short summary of your experience and stack."></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeFile">Resume file (PDF, DOC, or image)</label>
+            <input type="file" id="resumeFile" class="form-input" accept=".pdf,.doc,.docx,.txt,image/*">
+            <div class="form-helper">File stays local; content is sent to Grok for extraction. Max ~2.5MB.</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="targetRole">Target Role</label>
+            <input type="text" id="targetRole" class="form-input" placeholder="e.g., Senior Software Engineer">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="targetCompany">Target Company</label>
+            <input type="text" id="targetCompany" class="form-input" placeholder="e.g., Acme Corp">
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-label" for="jobDescription">Job Description (optional, paste summary)</label>
+            <textarea id="jobDescription" class="form-textarea" placeholder="Paste the main responsibilities/requirements to tailor the answers."></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="emphasizeKeywords">
+              <input type="checkbox" id="emphasizeKeywords"> Emphasize job keywords
+            </label>
+            <div class="form-helper">Reuse role/JD keywords to improve ATS matching.</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="mockMode">
+              <input type="checkbox" id="mockMode"> Mock mode (no API calls)
+            </label>
+            <div class="form-helper">Returns sample answers for UI/testing without hitting Grok.</div>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <div class="grok-status-row">
+            <span id="resumeStatus" class="badge badge-muted">Not extracted</span>
+            <button id="extractResumeBtn" class="btn btn-secondary">Extract from resume file</button>
+            <button id="generateGrokBtn" class="btn btn-primary">Generate tailored answers</button>
+            <button id="deleteExtractedBtn" class="btn btn-ghost">Delete extracted data</button>
+          </div>
+          <div class="grok-status-row">
+            <span id="lastExtractedAt" class="badge badge-muted">Last extract: n/a</span>
+            <span id="lastGeneratedAt" class="badge badge-muted">Last generate: n/a</span>
+            <button id="retryGrokBtn" class="btn btn-ghost">Retry last action</button>
+          </div>
+          <div id="grokErrorLog" class="error-log"></div>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Profile presets</div>
+            <div class="form-helper">Save and switch between multiple profiles (e.g., Full-stack vs Data vs Manager track).</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="profileSelect">Saved profiles</label>
+            <select id="profileSelect" class="form-input"></select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="profileName">Profile name</label>
+            <input type="text" id="profileName" class="form-input" placeholder="e.g., Full-stack, Data, Manager">
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="applyProfileBtn" class="btn btn-secondary">Apply selected</button>
+          <button id="saveProfileBtn" class="btn btn-primary">Save/overwrite</button>
+          <button id="deleteProfileBtn" class="btn btn-ghost">Delete selected</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Automation & safety</div>
+            <div class="form-helper">Toggle auto-submit after autofill. Use with caution; some sites may reject automated submits.</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="autoSubmitEnabled">
+              <input type="checkbox" id="autoSubmitEnabled"> Auto-submit when safe
+            </label>
+            <div class="form-helper">Clicks the primary submit/apply button after filling.</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="autoSubmitDelay">Submit delay (ms)</label>
+            <input type="number" id="autoSubmitDelay" class="form-input" min="500" step="100" value="1200">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">AI job setup assistant</div>
+            <div class="form-helper">Describe the kinds of jobs you want. Grok will propose settings (role, company, location, salary). Applies to fields automatically.</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <label class="form-label" for="jobSetupInput">Tell us about the jobs you want</label>
+            <textarea id="jobSetupInput" class="form-textarea" placeholder="e.g., remote senior full-stack roles, US Eastern time, prefer fintech or SaaS, comp expectations..."></textarea>
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-label" for="jobSetupOutput">Assistant response</label>
+            <textarea id="jobSetupOutput" class="form-textarea" readonly></textarea>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="jobSetupBtn" class="btn btn-primary">Suggest and apply</button>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Chat with Grok</div>
+            <div class="form-helper">Ask questions about tailoring your profile or jobs. Replies stay local.</div>
+          </div>
+          <div class="btn-group-inline">
+            <button id="assistantAskBtn" class="btn btn-secondary">Send</button>
+            <button id="assistantClearBtn" class="btn btn-ghost">Clear</button>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field form-field--full">
+            <label class="form-label" for="assistantChatInput">Message</label>
+            <textarea id="assistantChatInput" class="form-textarea" placeholder="Ask about a role, how to answer a question, etc."></textarea>
+          </div>
+          <div class="form-field form-field--full">
+            <label class="form-label" for="assistantChatLog">Grok replies</label>
+            <textarea id="assistantChatLog" class="form-textarea" readonly placeholder="Replies will appear here."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Job suggestions</div>
+            <div class="form-helper">Fetch suggested roles/companies from your preferences. Suggestions can be pushed into the queue.</div>
+          </div>
+          <div class="btn-group-inline">
+            <button id="fetchSuggestionsBtn" class="btn btn-secondary">Get suggestions</button>
+            <button id="queueSuggestionsBtn" class="btn btn-ghost">Add to queue</button>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="useLiveSuggestions">
+              <input type="checkbox" id="useLiveSuggestions"> Prefer live data (Remotive)
+            </label>
+            <div class="form-helper">Uses remotive.io API when available, falls back to Grok.</div>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="jobSuggestions">Suggested jobs</label>
+          <textarea id="jobSuggestions" class="form-textarea" readonly placeholder="Suggestions will appear here..."></textarea>
+        </div>
+      </div>
+
+      <div class="panel span-2">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">JD digest & keywords</div>
+            <div class="form-helper">Summarize the JD, surface keywords, and draft outreach/follow-up messages.</div>
+          </div>
+          <div class="btn-group-inline">
+            <button id="digestJDBtn" class="btn btn-primary">Digest JD</button>
+            <button id="interviewPrepBtn" class="btn btn-secondary">Interview prep</button>
+            <button id="printPrepBtn" class="btn btn-ghost">Print/Preview</button>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">JD Summary</label>
+            <textarea id="jdSummary" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Role-tailored bullets</label>
+            <textarea id="roleBullets" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Top Keywords</label>
+            <textarea id="jdKeywords" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Suggested keywords to add</label>
+            <textarea id="missingKeywords" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Recruiter outreach note</label>
+            <textarea id="recruiterNote" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Follow-up note</label>
+            <textarea id="followupNote" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Company snapshot</label>
+            <textarea id="companySnapshot" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Why-us talking points</label>
+            <textarea id="whyUsPoints" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Interview questions</label>
+            <textarea id="interviewQuestions" class="form-textarea" readonly></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Interview talking points</label>
+            <textarea id="interviewTalkingPoints" class="form-textarea" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Quick snippets</div>
+            <div class="form-helper">Reusable answers for common questions.</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="availabilitySnippet">Availability</label>
+            <textarea id="availabilitySnippet" class="form-textarea"></textarea>
+            <button class="btn btn-ghost btn-inline" data-copy-src="availabilitySnippet">Copy</button>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="relocationSnippet">Relocation</label>
+            <textarea id="relocationSnippet" class="form-textarea"></textarea>
+            <button class="btn btn-ghost btn-inline" data-copy-src="relocationSnippet">Copy</button>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="clearanceSnippet">Clearance</label>
+            <textarea id="clearanceSnippet" class="form-textarea"></textarea>
+            <button class="btn btn-ghost btn-inline" data-copy-src="clearanceSnippet">Copy</button>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="portfolioSnippet">Portfolio highlight</label>
+            <textarea id="portfolioSnippet" class="form-textarea"></textarea>
+            <button class="btn btn-ghost btn-inline" data-copy-src="portfolioSnippet">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Portfolio links</div>
+            <div class="form-helper">Store project links with tags; we'll suggest matches based on the JD.</div>
+          </div>
+          <button id="matchPortfolioBtn" class="btn btn-secondary">Match portfolio to JD</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="projectName">Project name</label>
+            <input type="text" id="projectName" class="form-input" placeholder="e.g., Analytics Dashboard">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="projectUrl">Project URL</label>
+            <input type="url" id="projectUrl" class="form-input" placeholder="https://...">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="projectTags">Tags (comma separated)</label>
+            <input type="text" id="projectTags" class="form-input" placeholder="react, node, data">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="projectSelect">Saved projects</label>
+            <select id="projectSelect" class="form-input"></select>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="saveProjectBtn" class="btn btn-primary">Save/overwrite project</button>
+          <button id="deleteProjectBtn" class="btn btn-ghost">Delete project</button>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Suggested matches for this JD</label>
+          <textarea id="matchedProjects" class="form-textarea" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Salary research</div>
+            <div class="form-helper">Fetch a market range (best effort) for role/location.</div>
+          </div>
+          <button id="salaryResearchBtn" class="btn btn-secondary">Fetch salary range</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="salaryRole">Role</label>
+            <input type="text" id="salaryRole" class="form-input" placeholder="e.g., Senior Software Engineer">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="salaryLocation">Location</label>
+            <input type="text" id="salaryLocation" class="form-input" placeholder="e.g., Orlando, FL">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Market salary estimate</label>
+          <textarea id="salaryEstimate" class="form-textarea" readonly></textarea>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Backup & export</div>
+            <div class="form-helper">Export applications to CSV and backup/restore your settings locally.</div>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="exportCsvBtn" class="btn btn-secondary">Export applications CSV</button>
+          <button id="backupSettingsBtn" class="btn btn-secondary">Backup settings</button>
+          <button id="restoreSettingsBtn" class="btn btn-ghost">Restore settings</button>
+          <input type="file" id="settingsFileInput" style="display:none" accept=".json">
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Resume variants</div>
+            <div class="form-helper">Store multiple resume links and pick the active one for autofill.</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="resumeVariantName">Variant name</label>
+            <input type="text" id="resumeVariantName" class="form-input" placeholder="e.g., Full-stack, Data, Manager">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeVariantUrl">Variant URL</label>
+            <input type="url" id="resumeVariantUrl" class="form-input" placeholder="https://...">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="resumeVariantSelect">Saved variants</label>
+            <select id="resumeVariantSelect" class="form-input"></select>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="addResumeVariantBtn" class="btn btn-primary">Save/overwrite variant</button>
+          <button id="applyResumeVariantBtn" class="btn btn-secondary">Set as active</button>
+          <button id="deleteResumeVariantBtn" class="btn btn-ghost">Delete variant</button>
+          <span id="activeResumeBadge" class="badge badge-muted">Active resume: default</span>
+          <button id="exportTargetedResumeBtn" class="btn btn-secondary btn-ghost">Export targeted resume</button>
+        </div>
+      </div>
+
+      <div class="panel panel--compact">
+        <div class="panel-header">
+          <div class="panel-title">EEO / self-identification</div>
+          <div class="form-helper">Used for disability/veteran questions. Edit to match your preferred response text.</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="disabilityStatus">Disability Status</label>
+            <select id="disabilityStatus" class="form-input">
+              <option value="I prefer not to say">I prefer not to say (default)</option>
+              <option value="Yes, I have a disability">Yes, I have a disability</option>
+              <option value="No, I do not have a disability">No, I do not have a disability</option>
+              <option value="I do not wish to answer">I do not wish to answer</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="veteranStatus">Veteran Status</label>
+            <select id="veteranStatus" class="form-input">
+              <option value="I am not a protected veteran">I am not a protected veteran (default)</option>
+              <option value="I am a protected veteran">I am a protected veteran</option>
+              <option value="I am not a veteran">I am not a veteran</option>
+              <option value="I do not wish to answer">I do not wish to answer</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel span-2 panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Application tracker</div>
+            <div class="form-helper">Snapshot of recently auto-logged applications. Open the full tracker to edit statuses.</div>
+          </div>
+          <button id="openTrackerBtn" class="btn btn-secondary btn-ghost">Open full tracker</button>
+        </div>
+
+        <div class="metrics-grid metrics-grid--compact">
+          <div class="metric-card">
+            <div class="metric-value" id="trackerTotal">0</div>
+            <div class="metric-label">Total</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerLast7">0</div>
+            <div class="metric-label">Last 7 days</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerInterview">0</div>
+            <div class="metric-label">Interviewing</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="trackerOffer">0</div>
+            <div class="metric-label">Offers</div>
+          </div>
+        </div>
+
+        <div class="tracker-controls">
+          <input type="text" id="trackerSearch" class="form-input form-input--search" placeholder="Search by company or job title...">
+          <div class="filter-pills" id="trackerFilters">
+            <button class="filter-pill active" data-filter="all">All</button>
+            <button class="filter-pill" data-filter="APPLIED">Applied</button>
+            <button class="filter-pill" data-filter="REVIEWING">Reviewing</button>
+            <button class="filter-pill" data-filter="INTERVIEW">Interview</button>
+            <button class="filter-pill" data-filter="OFFER">Offer</button>
+            <button class="filter-pill" data-filter="REJECTED">Rejected</button>
+          </div>
+        </div>
+
+        <div id="trackerList" class="jobs-list jobs-list--compact"></div>
+      </div>
+
+      <div class="panel span-2 panel--compact">
+        <div class="panel-header">
+          <div class="panel-title">Reusable answers</div>
+          <div class="form-helper">These are used for long-answer fields like "Tell us about yourself" or "Why do you want this role?"</div>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="aboutYou">About You</label>
+            <textarea id="aboutYou" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="whyThisRoleTemplate">Why This Role (Template)</label>
+            <textarea id="whyThisRoleTemplate" class="form-textarea"></textarea>
+            <div class="form-helper">Use {role} and {company} as placeholders</div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="strengths">Strengths</label>
+            <textarea id="strengths" class="form-textarea"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="remotePreference">Remote Preference</label>
+            <textarea id="remotePreference" class="form-textarea"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel span-2 panel--compact">
+        <div class="panel-header panel-header--stacked">
+          <div>
+            <div class="panel-title">Job queue (mass apply)</div>
+            <div class="form-helper">Add job URLs to queue. Use “Start mass apply” in the popup to open each and prefill automatically.</div>
+          </div>
+          <button id="clearJobQueueBtn" class="btn btn-ghost">Clear queue</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="queueCompany">Company</label>
+            <input type="text" id="queueCompany" class="form-input" placeholder="Company name">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="queueTitle">Role</label>
+            <input type="text" id="queueTitle" class="form-input" placeholder="Job title">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="queueUrl">Job URL</label>
+            <input type="url" id="queueUrl" class="form-input" placeholder="https://...">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="queueSelect">Queued jobs</label>
+            <select id="queueSelect" class="form-input"></select>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button id="addQueueBtn" class="btn btn-primary">Save/overwrite</button>
+          <button id="deleteQueueBtn" class="btn btn-ghost">Delete selected</button>
+        </div>
+        <div class="form-helper">Mass apply opens each queued URL in tabs with delays and auto-prefills.</div>
+      </div>
+    </div>
+
+    <div class="options-footer">
+      <button id="saveBtn" class="btn btn-primary">Save profile</button>
+      <div id="saveStatus" class="save-status">Profile saved successfully!</div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
